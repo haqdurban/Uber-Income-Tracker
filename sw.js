@@ -1,6 +1,6 @@
 // Offline support: cache the app shell, serve from cache first, refresh in the background.
 // Bump CACHE when you change any app file so installed copies update.
-const CACHE = "uber-income-tracker-v1";
+const CACHE = "uber-income-tracker-v2";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest",
   "./icons/icon-192.png", "./icons/icon-512.png", "./icons/icon-maskable-512.png", "./icons/apple-touch-icon.png"];
 
