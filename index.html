@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Uber Income Tracker</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#2b2f8f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Income Tracker">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e8f1fc;--surface:#fff;--ink:#14213d;--mute:#5a6785;--line:#e1eaf6;--brand:#4f46e5;--brand-ink:#fff;--pos:#0f8a5f;--neg:#c2410c;--warn:#8a5a00;--chip:#e3ecfa;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1226;--surface:#131c36;--ink:#e6ebf8;--mute:#9aa6c7;--line:#25305a;--brand:#7c83ff;--brand-ink:#0b1226;--pos:#4cd1a1;--neg:#ff9a85;--warn:#e0b04c;--chip:#1b2647;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0b1226;--surface:#131c36;--ink:#e6ebf8;--mute:#9aa6c7;--line:#25305a;--brand:#7c83ff;--brand-ink:#0b1226;--pos:#4cd1a1;--neg:#ff9a85;--warn:#e0b04c;--chip:#1b2647;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+h1,h2,h3,.num{font-family:"Bricolage Grotesque",Inter,system-ui,sans-serif;letter-spacing:-.01em}
+.wrap{max-width:1040px;margin:0 auto;padding:16px}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:20px 22px;margin-bottom:16px;border-radius:16px;color:#fff;background:linear-gradient(120deg,#0b1437 0%,#2b2f8f 55%,#6d3fc4 100%);box-shadow:0 6px 20px rgba(43,47,143,.25)}
+h1{font-size:26px;margin:0;font-weight:700}
+h1 small{display:block;font:500 14px Inter,sans-serif;color:rgba(255,255,255,.85);letter-spacing:0;margin-top:4px}
+nav{display:flex;gap:4px;background:rgba(255,255,255,.14);padding:4px;border-radius:12px;overflow-x:auto;max-width:100%}
+nav button{border:0;background:none;color:rgba(255,255,255,.82);font:500 14px Inter,sans-serif;padding:8px 14px;border-radius:9px;cursor:pointer;white-space:nowrap}
+nav button[aria-selected=true]{background:#fff;color:#1e1b4b;font-weight:600}
+nav :focus-visible{outline-color:#fff}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:14px}
+select,input{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;width:100%;min-width:0}
+.bar select{width:auto}
+label{display:block;font-size:13px;color:var(--mute);margin-bottom:4px}
+.grid{display:grid;gap:16px}
+.kpis{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 1px 2px rgba(20,33,61,.05),0 8px 24px rgba(43,47,143,.07)}
+.card h2{font-size:18px;font-weight:600;margin:0 0 14px}
+.kpi .l{font-size:13.5px;font-weight:500;color:var(--mute)}
+.kpi .v{font-size:30px;font-weight:700;line-height:1.15;margin-top:6px}
+.kpi .s{font-size:12.5px;color:var(--mute);margin-top:2px}
+.hero{background:linear-gradient(135deg,#2b2f8f,#4f46e5);color:#fff;border-color:transparent}
+.hero .l,.hero .s{color:inherit;opacity:.85}
+.hero .v{font-size:40px}
+.pos{color:var(--pos)}.neg{color:var(--neg)}
+.two{grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin-top:12px}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;align-items:end}
+.btn{border:0;background:var(--brand);color:var(--brand-ink);font:600 14px Inter,sans-serif;padding:10px 16px;border-radius:9px;cursor:pointer}
+.btn.alt{background:var(--chip);color:var(--ink)}
+.btn.sm{padding:5px 10px;font-size:12.5px}
+.tw{overflow-x:auto;margin-top:12px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-weight:500;color:var(--mute);font-size:13px}
+td.r,th.r{text-align:right}
+.chart{display:flex;align-items:flex-end;gap:10px;height:150px;padding-top:8px}
+.col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:4px;min-width:0}
+.b{width:100%;max-width:44px;border-radius:6px 6px 0 0;background:var(--brand);min-height:2px}
+.b.n{background:var(--neg)}
+.col span{font-size:12px;color:var(--mute)}
+.row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px dashed var(--line)}
+.row:last-child{border:0}
+.row b{font-weight:600}
+.note{font-size:12.5px;color:var(--mute);margin-top:10px}
+.warn{background:var(--chip);border-radius:12px;padding:12px 14px;font-size:13px;color:var(--ink);margin-top:12px}
+.empty{padding:22px;text-align:center;color:var(--mute)}
+.chk{display:flex;gap:8px;align-items:center;padding-bottom:9px}.chk input{width:auto}.chk label{margin:0}
+.hide{display:none}
+@media(max-width:520px){.hero .v{font-size:34px}h1{font-size:22px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Uber Income Tracker<small id="who"></small></h1>
+  <nav role="tablist" id="tabs">
+    <button role="tab" data-t="dash" aria-selected="true">Dashboard</button>
+    <button role="tab" data-t="inc" aria-selected="false">Income</button>
+    <button role="tab" data-t="exp" aria-selected="false">Expenses</button>
+    <button role="tab" data-t="set" aria-selected="false">Settings</button>
+  </nav>
+</header>
+
+<div class="bar">
+  <div><label for="period" class="hide">Period</label>
+  <select id="period">
+    <option value="month">Current Month</option>
+    <option value="quarter">Current Quarter</option>
+    
+    
+    
+    
+    <option value="fy" selected>Financial Year</option>
+    <option value="all">All Data</option>
+  </select></div>
+  <div id="range" class="note" style="margin:0"></div>
+</div>
+
+<main>
+<section id="dash">
+  <div class="grid kpis">
+    <div class="card kpi hero"><div class="l">Profit after expenses (ex GST)</div><div class="v num" id="k-profit"></div><div class="s" id="k-profit-s"></div></div>
+    <div class="card kpi"><div class="l">Income ex GST</div><div class="v num" id="k-inc"></div><div class="s" id="k-inc-s"></div></div>
+    <div class="card kpi"><div class="l">Expenses ex GST</div><div class="v num" id="k-exp"></div><div class="s" id="k-exp-s"></div></div>
+    <div class="card kpi"><div class="l">Estimated GST payable</div><div class="v num" id="k-gst"></div><div class="s" id="k-gst-s"></div></div>
+  </div>
+  <div class="grid two">
+    <div class="card"><h2>GST Summary</h2><div id="gst-box"></div>
+      <div class="warn"><b>Disclaimer:</b> GST calculations are estimates for record-keeping purposes only. Please verify GST treatment and your Business Activity Statement (BAS) figures with a qualified accountant or registered tax agent.</div></div>
+    <div id="stats" class="hide"></div>
+    <div class="card"><h2>Profit by month</h2><div class="chart" id="chart"></div><div class="note">Last 6 months, ex GST.</div></div>
+    <div class="card"><h2>Expenses by category</h2><div id="cats"></div></div>
+  </div>
+</section>
+
+<section id="inc" class="hide">
+  <div class="card"><h2>Add income</h2>
+    <div class="form" id="inc-form">
+      <div><label for="i-date">Date</label><input type="date" id="i-date"></div>
+      <div><label for="i-fare">Fares (incl GST) $</label><input type="number" id="i-fare" step="0.01" min="0" inputmode="decimal"></div>
+      <div><label for="i-tips">Tips $</label><input type="number" id="i-tips" step="0.01" min="0" inputmode="decimal"></div>
+      <div><label for="i-fee">Uber fees (incl GST) $</label><input type="number" id="i-fee" step="0.01" min="0" inputmode="decimal"></div>
+      <div><label for="i-trips">Trips</label><input type="number" id="i-trips" min="0" inputmode="numeric"></div>
+      <div><label for="i-km">Km driven (business)</label><input type="number" id="i-km" min="0" step="0.1" inputmode="decimal"></div>
+      <div><label for="i-hrs">Hours online</label><input type="number" id="i-hrs" min="0" step="0.25" inputmode="decimal"></div>
+      <div><button class="btn" id="i-add">Add income</button></div>
+    </div>
+    <div class="note" id="i-err"></div>
+  </div>
+  <div class="card tw" style="margin-top:12px"><div id="inc-list"></div></div>
+</section>
+
+<section id="exp" class="hide">
+  <div class="card"><h2>Add expense</h2>
+    <div class="form">
+      <div><label for="e-date">Date</label><input type="date" id="e-date"></div>
+      <div><label for="e-cat">Category</label><select id="e-cat"></select></div>
+      <div><label for="e-desc">Description</label><input id="e-desc" placeholder="e.g. BP Marden"></div>
+      <div><label for="e-amt">Amount $</label><input type="number" id="e-amt" step="0.01" min="0" inputmode="decimal"></div>
+      <div><label for="e-pct">Business use %</label><input type="number" id="e-pct" min="0" max="100" value="100" inputmode="numeric"></div>
+      <div class="chk"><input type="checkbox" id="e-gst" checked><label for="e-gst">Includes GST</label></div>
+      <div><button class="btn" id="e-add">Add expense</button></div>
+    </div>
+    <div class="note" id="e-err"></div>
+  </div>
+  <div class="card tw" style="margin-top:12px"><div id="exp-list"></div></div>
+</section>
+
+<section id="set" class="hide">
+  <div class="grid two" style="margin-top:0">
+    <div class="card"><h2>BUSINESS &amp; TAX SETTINGS</h2>
+      <div class="form" style="grid-template-columns:1fr 1fr">
+        <div style="grid-column:1/-1"><label for="s-name">Business or driver name</label><input id="s-name" autocomplete="name" placeholder="e.g. Alex Nguyen"></div>
+        <div style="grid-column:1/-1"><label for="s-abn">Australian Business Number (ABN)</label><input id="s-abn" inputmode="numeric" placeholder="11 digits, e.g. 51 824 753 556"></div>
+        <div><label for="s-reg">GST registration status</label><select id="s-reg"><option value="yes">Registered for GST</option><option value="no">Not registered</option></select></div>
+        <div><label for="s-grate">GST rate (%)</label><input type="number" id="s-grate" step="0.1" min="0" max="100" inputmode="decimal"></div>
+        <div style="grid-column:1/-1"><label for="s-rate">Cents-per-km rate ($/km)</label><input type="number" id="s-rate" step="0.01" min="0" inputmode="decimal"></div>
+      </div>
+      <div class="note">The GST rate is used for every GST estimate in this app (Australia's standard rate is 10%). The cents-per-km rate is used for the dashboard comparison, capped at 5,000 business km a year; check the current rate on ato.gov.au. Rideshare drivers are generally required to register for GST regardless of income.</div>
+      <p style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><button class="btn" id="s-save">Save settings</button><span id="s-msg" class="note" style="margin:0" role="status"></span></p>
+    </div>
+    <div class="card"><h2>Your data</h2>
+      <p class="note" style="margin-top:0">Everything is stored only in this browser. Export a backup before clearing browser data.</p>
+      <p style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn alt" id="x-inc">Export income CSV</button><button class="btn alt" id="x-exp">Export expenses CSV</button><button class="btn alt" id="x-clr">Delete all data</button></p>
+    </div>
+  </div>
+  <div class="warn"><b>How it works:</b> fares, Uber fees and GST-inclusive expenses are treated as including GST at your saved rate (GST = amount × rate ÷ (100 + rate)). Expense credits are scaled by business-use percentage, and tips are treated as GST-free.</div>
+  <div class="warn"><b>Disclaimer:</b> GST calculations in this app are estimates for record-keeping purposes only and are not tax, legal or financial advice. Please verify GST treatment and your Business Activity Statement (BAS) figures with a qualified accountant or registered tax agent before lodging or paying.</div>
+</section>
+</main>
+</div>
+
+<script>
+(function(){
+var CATS=["Fuel / charging","Insurance","Registration","Servicing & repairs","Tyres","Cleaning","Phone & data","Tolls","Parking","Car loan / lease","Accounting","Other"];
+var S={income:[],expenses:[],settings:{gst:true,rate:0.88}};
+try{var r=localStorage.getItem("uit-v1");if(r){var p=JSON.parse(r);if(p&&p.income)S=p}}catch(e){}
+S.settings=Object.assign({gst:true,rate:0.88,name:"",abn:"",gstRate:10},S.settings||{});
+function save(){try{localStorage.setItem("uit-v1",JSON.stringify(S))}catch(e){}}
+function gk(){var g=parseFloat(S.settings.gstRate);return isFinite(g)&&g>=0?g/100:0.1}
+function fmtAbn(a){return a&&a.length===11?a.replace(/^(\d{2})(\d{3})(\d{3})(\d{3})$/,"$1 $2 $3 $4"):(a||"")}
+function validAbn(a){if(!/^\d{11}$/.test(a))return false;var w=[10,1,3,5,7,9,11,13,15,17,19],s=0,i,d;for(i=0;i<11;i++){d=+a.charAt(i);if(i===0)d-=1;s+=d*w[i]}return s%89===0}
+var $=function(i){return document.getElementById(i)};
+var fmt=new Intl.NumberFormat("en-AU",{style:"currency",currency:"AUD"});
+var m$=function(n){return fmt.format(n||0)};
+var uid=function(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)};
+var today=function(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
+
+function bounds(per){
+  var d=new Date(),y=d.getFullYear(),m=d.getMonth(),a,b;
+  if(per==="month"){a=new Date(y,m,1);b=new Date(y,m+1,0)}
+  else if(per==="quarter"){var qs=Math.floor(((m+6)%12)/3)*3;var sm=(qs+6)%12;var sy=sm>m?y-1:y;a=new Date(sy,sm,1);b=new Date(sy,sm+3,0)}
+  else if(/^q[1-4]$/.test(per)){var n=+per.charAt(1),f0=m>=6?y:y-1,qm=(6+(n-1)*3)%12,qy=n<=2?f0:f0+1;a=new Date(qy,qm,1);b=new Date(qy,qm+3,0)}
+  else if(per==="fy"){var fy=m>=6?y:y-1;a=new Date(fy,6,1);b=new Date(fy+1,5,30)}
+  else return null;
+  return [a,b];
+}
+function inP(ds,bd){if(!bd)return true;var t=new Date(ds+"T00:00:00");return t>=bd[0]&&t<=bd[1]}
+function dfmt(d){return d.toLocaleDateString("en-AU",{day:"numeric",month:"short",year:"numeric"})}
+
+function expCalc(e){var biz=e.amt*(e.pct/100);var k=gk();var gst=e.gst?biz*k/(1+k):0;return{ex:biz-gst,gst:gst,biz:biz}}
+
+function calc(bd){
+  var I=S.income.filter(function(x){return inP(x.date,bd)}),E=S.expenses.filter(function(x){return inP(x.date,bd)});
+  var fares=0,tips=0,fees=0,trips=0,km=0,hrs=0;
+  I.forEach(function(x){fares+=x.fare;tips+=x.tips;fees+=x.fee;trips+=x.trips;km+=x.km;hrs+=x.hrs});
+  var reg=S.settings.gst;
+  var k=gk(),gstColl=reg?fares*k/(1+k):0,feeCredit=reg?fees*k/(1+k):0;
+  var expEx=0,expCred=0,cats={};
+  E.forEach(function(e){var c=expCalc(e);expEx+=reg?c.ex:c.biz;expCred+=reg?c.gst:0;cats[e.cat]=(cats[e.cat]||0)+(reg?c.ex:c.biz)});
+  var incEx=(reg?fares/(1+k):fares)+tips;
+  var feeEx=reg?fees/(1+k):fees;
+  var profit=incEx-feeEx-expEx;
+  return{I:I,E:E,fares:fares,tips:tips,fees:fees,trips:trips,km:km,hrs:hrs,gstColl:gstColl,feeCredit:feeCredit,expCred:expCred,expEx:expEx+feeEx,incEx:incEx,profit:profit,cats:cats,net:gstColl-feeCredit-expCred,feeEx:feeEx,ownExp:expEx}
+}
+
+function render(){
+  var per=$("period").value,bd=bounds(per),c=calc(bd);
+  $("who").textContent=[S.settings.name,S.settings.abn?"ABN "+fmtAbn(S.settings.abn):""].filter(Boolean).join(" · ");$("range").textContent=bd?dfmt(bd[0])+" to "+dfmt(bd[1]):"All recorded entries";
+  $("k-profit").textContent=m$(c.profit);
+  $("k-profit-s").textContent=c.hrs?m$(c.profit/c.hrs)+" per hour online":"Add hours to see $/hour";
+  $("k-inc").textContent=m$(c.incEx);$("k-inc-s").textContent=c.trips+" trips, tips "+m$(c.tips);
+  $("k-exp").textContent=m$(c.expEx);$("k-exp-s").textContent="incl. Uber fees "+m$(c.feeEx);
+  var g=$("k-gst");g.textContent=m$(c.net);g.className="v num "+(c.net>0?"neg":"pos");
+  $("k-gst-s").textContent=c.net<0?"Refund position for this period":"Set this aside for your BAS";
+  $("gst-box").innerHTML=S.settings.gst?
+    row("GST Collected",m$(c.gstColl))+row("GST Credits",m$(c.feeCredit+c.expCred))+row("<b>Net GST</b>","<b>"+m$(c.net)+"</b>")
+    :'<div class="empty">GST is turned off in Settings.</div>';
+  var ckm=Math.min(c.km,5000)*S.settings.rate,actual=c.ownExp;
+  $("stats").innerHTML=row("Trips",c.trips)+row("Business km",c.km.toLocaleString("en-AU"))+row("Hours online",c.hrs)+
+    row("Income per km",c.km?m$(c.incEx/c.km):"-")+row("Profit per trip",c.trips?m$(c.profit/c.trips):"-")+
+    row("Cents-per-km deduction",m$(ckm))+row("Actual car & running costs",m$(actual));
+  // monthly chart
+  var now=new Date(),ms=[],i;
+  for(i=5;i>=0;i--){var d=new Date(now.getFullYear(),now.getMonth()-i,1);ms.push({y:d.getFullYear(),m:d.getMonth(),lbl:d.toLocaleDateString("en-AU",{month:"short"})})}
+  var vals=ms.map(function(x){var b=[new Date(x.y,x.m,1),new Date(x.y,x.m+1,0)];return calc(b).profit});
+  var mx=Math.max.apply(null,vals.map(Math.abs).concat([1]));
+  $("chart").innerHTML=vals.map(function(v,k){return '<div class="col" title="'+m$(v)+'"><div class="b'+(v<0?" n":"")+'" style="height:'+Math.round(Math.abs(v)/mx*100)+'px"></div><span>'+ms[k].lbl+'</span></div>'}).join("");
+  var ck=Object.keys(c.cats).sort(function(a,b){return c.cats[b]-c.cats[a]});
+  $("cats").innerHTML=ck.length?ck.map(function(k){return row(esc(k),m$(c.cats[k]))}).join(""):'<div class="empty">No expenses in this period.</div>';
+  // income list
+  var il=c.I.slice().sort(function(a,b){return a.date<b.date?1:-1});
+  $("inc-list").innerHTML=il.length?'<table><thead><tr><th>Date</th><th class="r">Fares</th><th class="r">Tips</th><th class="r">Fees</th><th class="r">Trips</th><th class="r">Km</th><th class="r">Hrs</th><th></th></tr></thead><tbody>'+il.map(function(x){return '<tr><td>'+x.date+'</td><td class="r">'+m$(x.fare)+'</td><td class="r">'+m$(x.tips)+'</td><td class="r">'+m$(x.fee)+'</td><td class="r">'+x.trips+'</td><td class="r">'+x.km+'</td><td class="r">'+x.hrs+'</td><td class="r"><button class="btn alt sm" data-di="'+x.id+'">Delete</button></td></tr>'}).join("")+'</tbody></table>':'<div class="empty">No income recorded in this period. Add your first day above.</div>';
+  var el=c.E.slice().sort(function(a,b){return a.date<b.date?1:-1});
+  $("exp-list").innerHTML=el.length?'<table><thead><tr><th>Date</th><th>Category</th><th>Description</th><th class="r">Amount</th><th class="r">Business</th><th class="r">GST credit</th><th></th></tr></thead><tbody>'+el.map(function(x){var q=expCalc(x);return '<tr><td>'+x.date+'</td><td>'+esc(x.cat)+'</td><td>'+esc(x.desc||"")+'</td><td class="r">'+m$(x.amt)+'</td><td class="r">'+x.pct+'%</td><td class="r">'+m$(S.settings.gst?q.gst:0)+'</td><td class="r"><button class="btn alt sm" data-de="'+x.id+'">Delete</button></td></tr>'}).join("")+'</tbody></table>':'<div class="empty">No expenses in this period. Add fuel, insurance, servicing and more above.</div>';
+}
+function row(a,b){return '<div class="row"><span>'+a+'</span><span>'+b+'</span></div>'}
+function num(id){var v=parseFloat($(id).value);return isFinite(v)&&v>0?v:0}
+
+// tabs
+$("tabs").addEventListener("click",function(ev){var t=ev.target.closest("button");if(!t)return;
+  document.querySelectorAll("#tabs button").forEach(function(b){b.setAttribute("aria-selected",b===t)});
+  ["dash","inc","exp","set"].forEach(function(s){$(s).classList.toggle("hide",s!==t.dataset.t)});
+  $("period").parentNode.parentNode.classList.toggle("hide",t.dataset.t==="set")});
+$("period").addEventListener("change",render);
+
+$("e-cat").innerHTML=CATS.map(function(c){return "<option>"+c+"</option>"}).join("");
+$("i-date").value=$("e-date").value=today();
+var cm=new Date().getMonth(),cq=Math.floor(((cm+6)%12)/3)+1;
+
+$("i-add").addEventListener("click",function(){
+  var f=num("i-fare"),t=num("i-tips");
+  if(!$("i-date").value||(!f&&!t)){$("i-err").textContent="Enter a date and at least fares or tips.";return}
+  $("i-err").textContent="";
+  S.income.push({id:uid(),date:$("i-date").value,fare:f,tips:t,fee:num("i-fee"),trips:Math.round(num("i-trips")),km:num("i-km"),hrs:num("i-hrs")});
+  ["i-fare","i-tips","i-fee","i-trips","i-km","i-hrs"].forEach(function(i){$(i).value=""});
+  save();render()});
+$("e-add").addEventListener("click",function(){
+  var a=num("e-amt");
+  if(!$("e-date").value||!a){$("e-err").textContent="Enter a date and an amount above $0.";return}
+  $("e-err").textContent="";
+  var p=parseFloat($("e-pct").value);p=isFinite(p)?Math.min(100,Math.max(0,p)):100;
+  S.expenses.push({id:uid(),date:$("e-date").value,cat:$("e-cat").value,desc:$("e-desc").value.trim(),amt:a,pct:p,gst:$("e-gst").checked});
+  $("e-amt").value="";$("e-desc").value="";save();render()});
+document.addEventListener("click",function(ev){
+  var d=ev.target.dataset||{};
+  if(d.di){S.income=S.income.filter(function(x){return x.id!==d.di});save();render()}
+  if(d.de){S.expenses=S.expenses.filter(function(x){return x.id!==d.de});save();render()}});
+
+$("s-name").value=S.settings.name;$("s-abn").value=fmtAbn(S.settings.abn);$("s-grate").value=S.settings.gstRate;$("s-reg").value=S.settings.gst?"yes":"no";$("s-rate").value=S.settings.rate;
+$("s-save").addEventListener("click",function(){
+  var msg=$("s-msg"),abn=$("s-abn").value.replace(/\s/g,"");
+  if(abn&&!validAbn(abn)){msg.textContent="That ABN doesn't look valid. It should be 11 digits.";msg.className="note neg";return}
+  var gr=parseFloat($("s-grate").value);
+  if(!isFinite(gr)||gr<0||gr>100){msg.textContent="Enter a GST rate between 0 and 100.";msg.className="note neg";return}
+  var r=parseFloat($("s-rate").value);
+  S.settings.name=$("s-name").value.trim();S.settings.abn=abn;S.settings.gstRate=gr;S.settings.gst=$("s-reg").value==="yes";S.settings.rate=isFinite(r)&&r>=0?r:0.88;
+  $("s-abn").value=fmtAbn(abn);save();render();
+  msg.className="note pos";msg.textContent="Settings saved.";setTimeout(function(){msg.textContent=""},2500)});
+
+function csv(rows){return rows.map(function(r){return r.map(function(v){return '"'+String(v).replace(/"/g,'""')+'"'}).join(",")}).join("\n")}
+function dl(name,text){var a=document.createElement("a");a.href="data:text/csv;charset=utf-8,"+encodeURIComponent(text);a.download=name;document.body.appendChild(a);a.click();a.remove()}
+$("x-inc").addEventListener("click",function(){dl("uber-income.csv",csv([["Date","Fares","Tips","Uber fees","Trips","Km","Hours"]].concat(S.income.map(function(x){return[x.date,x.fare,x.tips,x.fee,x.trips,x.km,x.hrs]}))))});
+$("x-exp").addEventListener("click",function(){dl("uber-expenses.csv",csv([["Date","Category","Description","Amount","Business %","Includes GST"]].concat(S.expenses.map(function(x){return[x.date,x.cat,x.desc,x.amt,x.pct,x.gst?"Yes":"No"]}))))});
+$("x-clr").addEventListener("click",function(){
+  if($("x-clr").dataset.armed){S.income=[];S.expenses=[];save();render();$("x-clr").textContent="Delete all data";delete $("x-clr").dataset.armed}
+  else{$("x-clr").dataset.armed=1;$("x-clr").textContent="Click again to confirm";setTimeout(function(){$("x-clr").textContent="Delete all data";delete $("x-clr").dataset.armed},4000)}});
+render();
+})();
+</script>
+<script>
+if("serviceWorker" in navigator&&/^https?:$/.test(location.protocol)){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}
+</script>
+</body>
+</html>
