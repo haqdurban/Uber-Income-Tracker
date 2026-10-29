@@ -75,7 +75,7 @@ h1,h2,h3,h4,h5,h6{cursor:default!important}input,textarea,[contenteditable=true]
 
 </head>
 <body>
-<header><div><h1>Uber Finance Tracker</h1><small>Australian income, expenses & GST estimate</small></div><div id="fyHeader"></div></header>
+<header><div><h1>Uber Finance Tracker</h1><small id="hdrWho"></small></div><div id="fyHeader"></div></header>
 <nav id="nav"></nav>
 <main>
 <section id="dashboard" class="page active">
@@ -160,7 +160,7 @@ function save(){localStorage.setItem("uft_data",JSON.stringify(data));localStora
 function fyFor(d){let x=new Date(d+"T00:00:00");let y=x.getFullYear();return (x.getMonth()>=6?y:y-1)+"-"+String((x.getMonth()>=6?y+1:y).toString()).slice(-2)}
 function quarterFor(d){let m=new Date(d+"T00:00:00").getMonth();return m<=2?"Q3":m<=5?"Q4":m<=8?"Q1":"Q2"}
 function gstCalc(amount,status,override){let rate=Number(settings.gst)/100;if(status==="none"||status==="review")return 0;if(override!==""&&override!=null)return Number(override)||0;return status==="included"?amount*rate/(1+rate):amount*rate}
-function populate(){ $("inCat").innerHTML=incomeCats.map(x=>`<option>${x}</option>`).join(""); $("exCat").innerHTML=expenseCats.map(x=>`<option>${x}</option>`).join(""); let fys=[...new Set(data.map(x=>x.fy))];let now=new Date();let cur=fyFor(now.toISOString().slice(0,10));if(!fys.includes(cur))fys.push(cur);fys.sort().reverse();$("reportFY").innerHTML=fys.map(x=>`<option>${x}</option>`).join(""); $("sName").value=settings.name;$("sABN").value=settings.abn;$("sGST").value=settings.gst;$("sRegistered").value=settings.registered;$("fyHeader").textContent=cur+" Financial Year";}
+function populate(){ $("inCat").innerHTML=incomeCats.map(x=>`<option>${x}</option>`).join(""); $("exCat").innerHTML=expenseCats.map(x=>`<option>${x}</option>`).join(""); let fys=[...new Set(data.map(x=>x.fy))];let now=new Date();let cur=fyFor(now.toISOString().slice(0,10));if(!fys.includes(cur))fys.push(cur);fys.sort().reverse();$("reportFY").innerHTML=fys.map(x=>`<option>${x}</option>`).join(""); $("sName").value=settings.name;$("sABN").value=settings.abn;$("sGST").value=settings.gst;$("sRegistered").value=settings.registered;$("fyHeader").textContent=cur+" Financial Year";$("hdrWho").textContent=[settings.name,settings.abn?"ABN "+settings.abn:""].filter(Boolean).join(" \u00b7 ");}
 function currentQuarter(){return quarterFor(new Date().toISOString().slice(0,10))}
 function filterPeriod(period){let today=new Date(), ds=today.toISOString().slice(0,10);let fy=fyFor(ds), q=currentQuarter();return data.filter(x=>{if(period==="all")return true;if(period==="fy")return x.fy===fy;if(period==="quarter")return x.fy===fy&&x.quarter===q;if(period==="month")return x.date.slice(0,7)===ds.slice(0,7);return true})}
 function totals(list){let income=list.filter(x=>x.type==="income").reduce((s,x)=>s+x.amount,0);let exp=list.filter(x=>x.type==="expense").reduce((s,x)=>s+x.amount*(x.business/100),0);let collected=list.filter(x=>x.type==="income").reduce((s,x)=>s+x.gst,0);let credits=list.filter(x=>x.type==="expense").reduce((s,x)=>s+x.gst*(x.business/100),0);return {income,exp,profit:income-exp,collected,credits,netGST:collected-credits}}
