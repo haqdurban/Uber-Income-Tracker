@@ -1,310 +1,180 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en-AU">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Uber Income Tracker</title>
-<link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#2b2f8f">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Income Tracker">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="icon" type="image/png" href="icons/icon-192.png">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Uber Finance Tracker</title>
 <style>
-:root{--bg:#e8f1fc;--surface:#fff;--ink:#14213d;--mute:#5a6785;--line:#e1eaf6;--brand:#4f46e5;--brand-ink:#fff;--pos:#0f8a5f;--neg:#c2410c;--warn:#8a5a00;--chip:#e3ecfa;
-box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1226;--surface:#131c36;--ink:#e6ebf8;--mute:#9aa6c7;--line:#25305a;--brand:#7c83ff;--brand-ink:#0b1226;--pos:#4cd1a1;--neg:#ff9a85;--warn:#e0b04c;--chip:#1b2647;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#0b1226;--surface:#131c36;--ink:#e6ebf8;--mute:#9aa6c7;--line:#25305a;--brand:#7c83ff;--brand-ink:#0b1226;--pos:#4cd1a1;--neg:#ff9a85;--warn:#e0b04c;--chip:#1b2647;color-scheme:dark}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
-h1,h2,h3,.num{font-family:"Bricolage Grotesque",Inter,system-ui,sans-serif;letter-spacing:-.01em}
-.wrap{max-width:1040px;margin:0 auto;padding:16px}
-header{display:flex;flex-wrap:wrap;flex-direction:column;align-items:flex-start;gap:14px;padding:20px 22px;margin-bottom:16px;border-radius:16px;color:#fff;background:linear-gradient(120deg,#0b1437 0%,#2b2f8f 55%,#6d3fc4 100%);box-shadow:0 6px 20px rgba(43,47,143,.25)}
-h1{font-size:26px;margin:0;font-weight:700}
-h1 small{display:block;font:500 14px Inter,sans-serif;color:rgba(255,255,255,.85);letter-spacing:0;margin-top:4px}
-nav{display:flex;gap:4px;background:rgba(255,255,255,.14);padding:4px;border-radius:12px;overflow-x:auto;max-width:100%}
-nav button{border:0;background:none;color:rgba(255,255,255,.82);font:500 14px Inter,sans-serif;padding:8px 14px;border-radius:9px;cursor:pointer;white-space:nowrap}
-nav button[aria-selected=true]{background:#fff;color:#1e1b4b;font-weight:600}
-nav :focus-visible{outline-color:#fff}
-:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
-.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:14px}
-select,input{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;width:100%;min-width:0}
-.bar select{width:auto}
-label{display:block;font-size:13px;color:var(--mute);margin-bottom:4px}
-.grid{display:grid;gap:16px}
-.kpis{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 1px 2px rgba(20,33,61,.05),0 8px 24px rgba(43,47,143,.07)}
-.card h2{font-size:18px;font-weight:600;margin:0 0 14px}
-.kpi .l{font-size:13.5px;font-weight:500;color:var(--mute)}
-.kpi .v{font-size:30px;font-weight:700;line-height:1.15;margin-top:6px}
-.kpi .s{font-size:12.5px;color:var(--mute);margin-top:2px}
-.hero{background:linear-gradient(135deg,#2b2f8f,#4f46e5);color:#fff;border-color:transparent}
-.hero .l,.hero .s{color:inherit;opacity:.85}
-.hero .v{font-size:40px}
-.pos{color:var(--pos)}.neg{color:var(--neg)}
-.two{grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin-top:12px}
-.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;align-items:end}
-.btn{border:0;background:var(--brand);color:var(--brand-ink);font:600 14px Inter,sans-serif;padding:10px 16px;border-radius:9px;cursor:pointer}
-.btn.alt{background:var(--chip);color:var(--ink)}
-.btn.sm{padding:5px 10px;font-size:12.5px}
-.tw{overflow-x:auto;margin-top:12px}
-table{width:100%;border-collapse:collapse;font-size:14px}
-th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
-th{font-weight:500;color:var(--mute);font-size:13px}
-td.r,th.r{text-align:right}
-.chart{display:flex;align-items:flex-end;gap:10px;height:150px;padding-top:8px}
-.col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:4px;min-width:0}
-.b{width:100%;max-width:44px;border-radius:6px 6px 0 0;background:var(--brand);min-height:2px}
-.b.n{background:var(--neg)}
-.col span{font-size:12px;color:var(--mute)}
-.row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px dashed var(--line)}
-.row:last-child{border:0}
-.row b{font-weight:600}
-.note{font-size:12.5px;color:var(--mute);margin-top:10px}
-.warn{background:var(--chip);border-radius:12px;padding:12px 14px;font-size:13px;color:var(--ink);margin-top:12px}
-.empty{padding:22px;text-align:center;color:var(--mute)}
-.chk{display:flex;gap:8px;align-items:center;padding-bottom:9px}.chk input{width:auto}.chk label{margin:0}
-.hide{display:none}
-@media(max-width:520px){.hero .v{font-size:34px}h1{font-size:22px}}
+:root{--bg:#f5f7fa;--card:#fff;--text:#18212b;--muted:#667085;--border:#dfe4ea;--accent:#111827;--danger:#b42318;--ok:#067647}
+*{box-sizing:border-box} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+header{background:#111827;color:white;padding:18px 22px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+header h1{margin:0;font-size:21px} header small{opacity:.8}
+nav{background:#fff;border-bottom:1px solid var(--border);display:flex;gap:4px;padding:8px 12px;overflow:auto}
+nav button{border:0;background:transparent;padding:10px 13px;border-radius:8px;cursor:pointer;white-space:nowrap}
+nav button.active,nav button:hover{background:#eef2f6}
+main{max-width:1200px;margin:0 auto;padding:20px}
+.page{display:none}.page.active{display:block}
+h2{margin-top:0}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
+.metric{font-size:25px;font-weight:700;margin-top:8px}.label{color:var(--muted);font-size:13px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+form{display:grid;gap:12px}.formgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+label{font-size:13px;font-weight:600} input,select,textarea{width:100%;padding:10px;border:1px solid #cfd6df;border-radius:8px;background:white;font:inherit}
+textarea{min-height:80px}.actions{display:flex;gap:8px;flex-wrap:wrap}
+button.primary,button.secondary,button.danger{border:0;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:600}
+.primary{background:#111827;color:#fff}.secondary{background:#eef2f6;color:#18212b}.danger{background:#fee4e2;color:#b42318}
+table{width:100%;border-collapse:collapse;background:white}.tablewrap{overflow:auto;border:1px solid var(--border);border-radius:10px}
+th,td{padding:10px;border-bottom:1px solid var(--border);text-align:left;font-size:13px;white-space:nowrap} th{background:#f8fafc}
+.notice{padding:12px;border-radius:9px;background:#fff8e6;border:1px solid #f3d48a;margin-bottom:14px;font-size:13px}
+.good{color:var(--ok)} .bad{color:var(--danger)}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}.toolbar>*{max-width:220px}
+.hidden{display:none!important}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}.formgrid{grid-template-columns:1fr}}
+@media(max-width:520px){main{padding:12px}.grid{grid-template-columns:1fr}header{align-items:flex-start;flex-direction:column}}
 </style>
+
+
+
+
+<style id="verified-light-colour-layout">
+:root{color-scheme:light;--bg:#f3f6fb;--card:#fff;--text:#172033;--muted:#5b6880;--border:#dbe3ef}
+html,body{margin:0;min-height:100%;background:#f3f6fb!important;color:#172033!important;color-scheme:light!important;font-family:Arial,Helvetica,sans-serif}
+body{background-image:radial-gradient(ellipse at 0 0,rgba(59,130,246,.08),transparent 35%),radial-gradient(ellipse at 100% 0,rgba(124,58,237,.06),transparent 30%)}
+header{position:relative;margin-left:220px;background:#14213d!important;color:#fff!important;padding:20px 26px;min-height:88px}
+header h1{color:#fff!important;font-size:23px}header small{color:#dbeafe!important}#fyHeader{color:#fff!important}
+nav#nav{position:fixed;z-index:10;left:0;top:0;bottom:0;width:220px;display:flex;flex-direction:column;align-items:stretch;gap:7px;padding:22px 14px;background:#14213d!important;border:0;overflow-y:auto;box-shadow:4px 0 18px rgba(15,23,42,.12)}
+nav#nav:before{content:'FINANCE MENU';color:#9fb3d8;font-size:11px;font-weight:700;letter-spacing:1.5px;padding:6px 10px 14px}
+nav#nav button{width:100%;text-align:left;white-space:normal;background:transparent!important;color:#dbe5f6!important;border:0;border-radius:10px;padding:13px 14px;min-height:46px;font-weight:600;font-size:14px}
+nav#nav button:hover{background:#263858!important;color:#fff!important}
+nav#nav button.active{background:linear-gradient(100deg,#6d5dfc,#3478f6)!important;color:#fff!important;box-shadow:0 5px 14px rgba(59,130,246,.25)}
+main{margin:0 0 0 220px!important;max-width:none!important;padding:26px 28px!important;background:transparent}
+.page{background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important}
+.page h2{color:#243b67!important;font-size:25px;margin:0 0 18px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.grid>.card{min-width:0;min-height:128px;border:1px solid transparent!important;border-radius:16px!important;padding:20px!important;box-shadow:0 8px 22px rgba(25,42,70,.09)!important;color:#172033!important}
+#dashboard .grid>.card:nth-child(1),#reports .grid>.card:nth-child(1){background:linear-gradient(135deg,#e8fff2,#c7f9dc)!important;border-color:#86efac!important;border-top:5px solid #16a34a!important}
+#dashboard .grid>.card:nth-child(2),#reports .grid>.card:nth-child(2){background:linear-gradient(135deg,#fff4e8,#ffdfc2)!important;border-color:#fdba74!important;border-top:5px solid #ea580c!important}
+#dashboard .grid>.card:nth-child(3),#reports .grid>.card:nth-child(3){background:linear-gradient(135deg,#edf5ff,#cfe3ff)!important;border-color:#93c5fd!important;border-top:5px solid #2563eb!important}
+#dashboard .grid>.card:nth-child(4),#reports .grid>.card:nth-child(4){background:linear-gradient(135deg,#f5efff,#e4d7ff)!important;border-color:#c4b5fd!important;border-top:5px solid #7c3aed!important}
+.grid>.card .label{color:#465570!important;font-size:13px;font-weight:700;letter-spacing:.2px}
+.grid>.card .metric{color:#14213d!important;font-size:clamp(22px,2vw,29px);font-weight:800;overflow-wrap:anywhere}
+.card{background:#fff!important;color:#172033!important;border:1px solid #dbe3ef!important;border-radius:15px!important;box-shadow:0 5px 18px rgba(20,36,65,.06)!important;padding:18px}
+.card h3{color:#293f70!important}.card p{color:#475569!important}
+.toolbar select{background:#fff!important;color:#172033!important}
+input,select,textarea{width:100%;max-width:100%;min-height:46px;background:#fff!important;color:#172033!important;border:1px solid #cbd5e1!important;border-radius:10px!important;padding:11px 12px;font-size:16px!important}
+input::placeholder,textarea::placeholder{color:#7b8799!important}
+button,.btn,[type=button],[type=submit]{min-height:44px;border-radius:10px;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+button.primary,.primary,[type=submit]{background:linear-gradient(135deg,#6d5dfc,#3478f6)!important;color:#fff!important;border:0!important}
+button.secondary,.secondary{background:#e9eef8!important;color:#253653!important}
+button.danger,.danger{background:#fee4e2!important;color:#b42318!important}
+table{width:100%;border-collapse:collapse;color:#172033!important;background:#fff}th{background:#e8eef8!important;color:#24324b!important}td,tr{color:#172033!important;border-color:#e2e8f0!important}tr:nth-child(even){background:#f8fafc!important}.tablewrap{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+h1,h2,h3,h4,h5,h6{cursor:default!important}input,textarea,[contenteditable=true]{cursor:text;caret-color:#6d5dfc}img,canvas,svg{max-width:100%}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.two{grid-template-columns:1fr}.formgrid{grid-template-columns:1fr}}
+@media(max-width:650px){header{margin-left:0;padding:17px 16px;min-height:auto}header h1{font-size:21px}nav#nav{position:sticky;top:0;bottom:auto;width:100%;height:auto;flex-direction:row;align-items:center;gap:6px;padding:8px;background:#14213d!important;overflow-x:auto;box-shadow:0 4px 12px rgba(15,23,42,.15)}nav#nav:before{display:none}nav#nav button{flex:0 0 auto;width:auto;white-space:nowrap;padding:10px 12px;min-height:44px}main{margin:0!important;padding:16px 12px!important}.page h2{font-size:22px}.grid{gap:10px}.grid>.card{padding:14px!important;min-height:112px}.grid>.card .metric{font-size:clamp(20px,5vw,25px)}.two{gap:10px}.toolbar>*{max-width:100%}}
+@media(max-width:380px){.grid{grid-template-columns:1fr}header{gap:8px}}
+</style>
+
 </head>
 <body>
-<div class="wrap">
-<header>
-  <h1>Uber Income Tracker<small id="who"></small></h1>
-  <nav role="tablist" id="tabs">
-    <button role="tab" data-t="dash" aria-selected="true">Dashboard</button>
-    <button role="tab" data-t="inc" aria-selected="false">Income</button>
-    <button role="tab" data-t="exp" aria-selected="false">Expenses</button>
-    <button role="tab" data-t="set" aria-selected="false">Settings</button>
-  </nav>
-</header>
-
-<div class="bar">
-  <div><label for="period" class="hide">Period</label>
-  <select id="period">
-    <option value="month">Current Month</option>
-    <option value="quarter">Current Quarter</option>
-    
-    
-    
-    
-    <option value="fy" selected>Financial Year</option>
-    <option value="all">All Data</option>
-  </select></div>
-  <div id="range" class="note" style="margin:0"></div>
-</div>
-
+<header><div><h1>Uber Finance Tracker</h1><small>Australian income, expenses & GST estimate</small></div><div id="fyHeader"></div></header>
+<nav id="nav"></nav>
 <main>
-<section id="dash">
-  <div class="grid kpis">
-    <div class="card kpi hero"><div class="l">Profit after expenses (ex GST)</div><div class="v num" id="k-profit"></div><div class="s" id="k-profit-s"></div></div>
-    <div class="card kpi"><div class="l">Income ex GST</div><div class="v num" id="k-inc"></div><div class="s" id="k-inc-s"></div></div>
-    <div class="card kpi"><div class="l">Expenses ex GST</div><div class="v num" id="k-exp"></div><div class="s" id="k-exp-s"></div></div>
-    <div class="card kpi"><div class="l">Estimated GST payable</div><div class="v num" id="k-gst"></div><div class="s" id="k-gst-s"></div></div>
-  </div>
-  <div class="grid two">
-    <div class="card"><h2>GST Summary</h2><div id="gst-box"></div>
-      <div class="warn"><b>Disclaimer:</b> GST calculations are estimates for record-keeping purposes only. Please verify GST treatment and your Business Activity Statement (BAS) figures with a qualified accountant or registered tax agent.</div></div>
-    <div id="stats" class="hide"></div>
-    <div class="card"><h2>Profit by month</h2><div class="chart" id="chart"></div><div class="note">Last 6 months, ex GST.</div></div>
-    <div class="card"><h2>Expenses by category</h2><div id="cats"></div></div>
-  </div>
+<section id="dashboard" class="page active">
+<h2>Dashboard</h2>
+<div class="toolbar"><select id="dashPeriod"><option value="quarter">Current Quarter</option><option value="month">Current Month</option><option value="fy">Financial Year</option><option value="all">All Data</option></select></div>
+<div class="grid">
+<div class="card"><div class="label">Total Income</div><div class="metric" id="mIncome">$0.00</div></div>
+<div class="card"><div class="label">Total Expenses</div><div class="metric" id="mExpense">$0.00</div></div>
+<div class="card"><div class="label">Net Profit</div><div class="metric" id="mProfit">$0.00</div></div>
+<div class="card"><div class="label">Estimated GST Payable</div><div class="metric" id="mGST">$0.00</div></div>
+</div>
+<div class="two">
+<div class="card"><h3>GST Summary</h3><p>GST collected: <b id="mCollected">$0.00</b></p><p>GST credits: <b id="mCredits">$0.00</b></p><p>Net GST: <b id="mNetGST">$0.00</b></p></div>
+<div class="card"><h3>Quarter</h3><p id="quarterInfo"></p><p id="reviewInfo"></p></div>
+</div>
 </section>
 
-<section id="inc" class="hide">
-  <div class="card"><h2>Add income</h2>
-    <div class="form" id="inc-form">
-      <div><label for="i-date">Date</label><input type="date" id="i-date"></div>
-      <div><label for="i-fare">Fares (incl GST) $</label><input type="number" id="i-fare" step="0.01" min="0" inputmode="decimal"></div>
-      <div><label for="i-tips">Tips $</label><input type="number" id="i-tips" step="0.01" min="0" inputmode="decimal"></div>
-      <div><label for="i-fee">Uber fees (incl GST) $</label><input type="number" id="i-fee" step="0.01" min="0" inputmode="decimal"></div>
-      <div><label for="i-trips">Trips</label><input type="number" id="i-trips" min="0" inputmode="numeric"></div>
-      <div><label for="i-km">Km driven (business)</label><input type="number" id="i-km" min="0" step="0.1" inputmode="decimal"></div>
-      <div><label for="i-hrs">Hours online</label><input type="number" id="i-hrs" min="0" step="0.25" inputmode="decimal"></div>
-      <div><button class="btn" id="i-add">Add income</button></div>
-    </div>
-    <div class="note" id="i-err"></div>
-  </div>
-  <div class="card tw" style="margin-top:12px"><div id="inc-list"></div></div>
+<section id="income" class="page">
+<h2>Add Income</h2>
+<form id="incomeForm"><div class="formgrid">
+<div><label>Date</label><input type="date" id="inDate" required></div>
+<div><label>Category</label><select id="inCat"></select></div>
+<div><label>Amount (AUD)</label><input type="number" id="inAmount" min="0" step="0.01" required></div>
+<div><label>GST status</label><select id="inGST"><option value="included">GST included</option><option value="excluded">GST excluded</option><option value="none">No GST</option><option value="review">Review required</option></select></div>
+<div><label>GST amount (optional override)</label><input type="number" id="inGSTAmt" min="0" step="0.01" placeholder="Leave blank for automatic"></div>
+<div><label>Description</label><input id="inDesc"></div>
+</div><div class="actions"><button class="primary">Save Income</button><button type="reset" class="secondary">Clear</button></div></form>
 </section>
 
-<section id="exp" class="hide">
-  <div class="card"><h2>Add expense</h2>
-    <div class="form">
-      <div><label for="e-date">Date</label><input type="date" id="e-date"></div>
-      <div><label for="e-cat">Category</label><select id="e-cat"></select></div>
-      <div><label for="e-desc">Description</label><input id="e-desc" placeholder="e.g. BP Marden"></div>
-      <div><label for="e-amt">Amount $</label><input type="number" id="e-amt" step="0.01" min="0" inputmode="decimal"></div>
-      <div><label for="e-pct">Business use %</label><input type="number" id="e-pct" min="0" max="100" value="100" inputmode="numeric"></div>
-      <div class="chk"><input type="checkbox" id="e-gst" checked><label for="e-gst">Includes GST</label></div>
-      <div><button class="btn" id="e-add">Add expense</button></div>
-    </div>
-    <div class="note" id="e-err"></div>
-  </div>
-  <div class="card tw" style="margin-top:12px"><div id="exp-list"></div></div>
+<section id="expenses" class="page">
+<h2>Add Expense</h2>
+<form id="expenseForm"><div class="formgrid">
+<div><label>Date</label><input type="date" id="exDate" required></div>
+<div><label>Category</label><select id="exCat"></select></div>
+<div><label>Supplier</label><input id="exSupplier"></div>
+<div><label>Total amount (AUD)</label><input type="number" id="exAmount" min="0" step="0.01" required></div>
+<div><label>GST status</label><select id="exGST"><option value="included">GST included</option><option value="excluded">GST excluded</option><option value="none">No GST</option><option value="review">Review required</option></select></div>
+<div><label>GST amount (optional override)</label><input type="number" id="exGSTAmt" min="0" step="0.01" placeholder="Leave blank for automatic"></div>
+<div><label>Business-use %</label><input type="number" id="exBusiness" min="0" max="100" step="1" value="100" required></div>
+<div><label>Description</label><input id="exDesc"></div>
+</div><div class="actions"><button class="primary">Save Expense</button><button type="reset" class="secondary">Clear</button></div></form>
 </section>
 
-<section id="set" class="hide">
-  <div class="grid two" style="margin-top:0">
-    <div class="card"><h2>BUSINESS &amp; TAX SETTINGS</h2>
-      <div class="form" style="grid-template-columns:1fr 1fr">
-        <div style="grid-column:1/-1"><label for="s-name">Business or driver name</label><input id="s-name" autocomplete="name" placeholder="e.g. Alex Nguyen"></div>
-        <div style="grid-column:1/-1"><label for="s-abn">Australian Business Number (ABN)</label><input id="s-abn" inputmode="numeric" placeholder="11 digits, e.g. 51 824 753 556"></div>
-        <div><label for="s-reg">GST registration status</label><select id="s-reg"><option value="yes">Registered for GST</option><option value="no">Not registered</option></select></div>
-        <div><label for="s-grate">GST rate (%)</label><input type="number" id="s-grate" step="0.1" min="0" max="100" inputmode="decimal"></div>
-        <div style="grid-column:1/-1"><label for="s-rate">Cents-per-km rate ($/km)</label><input type="number" id="s-rate" step="0.01" min="0" inputmode="decimal"></div>
-      </div>
-      <div class="note">The GST rate is used for every GST estimate in this app (Australia's standard rate is 10%). The cents-per-km rate is used for the dashboard comparison, capped at 5,000 business km a year; check the current rate on ato.gov.au. Rideshare drivers are generally required to register for GST regardless of income.</div>
-      <p style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><button class="btn" id="s-save">Save settings</button><span id="s-msg" class="note" style="margin:0" role="status"></span></p>
-    </div>
-    <div class="card"><h2>Your data</h2>
-      <p class="note" style="margin-top:0">Everything is stored only in this browser. Export a backup before clearing browser data.</p>
-      <p style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn alt" id="x-inc">Export income CSV</button><button class="btn alt" id="x-exp">Export expenses CSV</button><button class="btn alt" id="x-clr">Delete all data</button></p>
-    </div>
-  </div>
-  <div class="warn"><b>How it works:</b> fares, Uber fees and GST-inclusive expenses are treated as including GST at your saved rate (GST = amount × rate ÷ (100 + rate)). Expense credits are scaled by business-use percentage, and tips are treated as GST-free.</div>
-  <div class="warn"><b>Disclaimer:</b> GST calculations in this app are estimates for record-keeping purposes only and are not tax, legal or financial advice. Please verify GST treatment and your Business Activity Statement (BAS) figures with a qualified accountant or registered tax agent before lodging or paying.</div>
+<section id="transactions" class="page">
+<h2>Transactions</h2>
+<div class="toolbar"><input id="search" placeholder="Search description/category/supplier"><select id="typeFilter"><option value="all">All types</option><option value="income">Income</option><option value="expense">Expense</option></select><select id="qFilter"><option value="all">All quarters</option><option>Q1</option><option>Q2</option><option>Q3</option><option>Q4</option></select></div>
+<div class="tablewrap"><table><thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Description</th><th>Amount</th><th>GST</th><th>Business %</th><th>Quarter</th><th>Action</th></tr></thead><tbody id="txBody"></tbody></table></div>
+</section>
+
+<section id="reports" class="page">
+<h2>Quarterly Reports</h2>
+<div class="toolbar"><select id="reportFY"></select><select id="reportQ"><option>Q1</option><option>Q2</option><option>Q3</option><option>Q4</option></select></div>
+<div class="grid">
+<div class="card"><div class="label">Income</div><div class="metric" id="rIncome">$0.00</div></div>
+<div class="card"><div class="label">Expenses</div><div class="metric" id="rExpense">$0.00</div></div>
+<div class="card"><div class="label">Net Profit</div><div class="metric" id="rProfit">$0.00</div></div>
+<div class="card"><div class="label">GST Payable</div><div class="metric" id="rGST">$0.00</div></div>
+</div>
+<div class="two"><div class="card"><h3>GST</h3><p>GST collected: <b id="rCollected">$0.00</b></p><p>GST credits: <b id="rCredits">$0.00</b></p><p>Net GST position: <b id="rNetGST">$0.00</b></p></div><div class="card"><h3>Expenses by Category</h3><div id="rCats"></div></div></div>
+</section>
+
+<section id="settings" class="page">
+<h2>Settings</h2>
+<div class="notice">GST calculations are estimates for record-keeping assistance. Verify GST treatment and BAS figures with your accountant/tax agent.</div>
+<form id="settingsForm"><div class="formgrid">
+<div><label>Business / Driver name</label><input id="sName"></div>
+<div><label>ABN</label><input id="sABN"></div>
+<div><label>GST rate %</label><input type="number" id="sGST" min="0" step="0.1" required></div>
+<div><label>GST registered?</label><select id="sRegistered"><option value="yes">Yes</option><option value="no">No</option></select></div>
+</div><button class="primary">Save Settings</button></form>
 </section>
 </main>
-</div>
-
 <script>
-(function(){
-var CATS=["Fuel / charging","Insurance","Registration","Servicing & repairs","Tyres","Cleaning","Phone & data","Tolls","Parking","Car loan / lease","Accounting","Other"];
-var S={income:[],expenses:[],settings:{gst:true,rate:0.88}};
-try{var r=localStorage.getItem("uit-v1");if(r){var p=JSON.parse(r);if(p&&p.income)S=p}}catch(e){}
-S.settings=Object.assign({gst:true,rate:0.88,name:"",abn:"",gstRate:10},S.settings||{});
-function save(){try{localStorage.setItem("uit-v1",JSON.stringify(S))}catch(e){}}
-function gk(){var g=parseFloat(S.settings.gstRate);return isFinite(g)&&g>=0?g/100:0.1}
-function fmtAbn(a){return a&&a.length===11?a.replace(/^(\d{2})(\d{3})(\d{3})(\d{3})$/,"$1 $2 $3 $4"):(a||"")}
-function validAbn(a){if(!/^\d{11}$/.test(a))return false;var w=[10,1,3,5,7,9,11,13,15,17,19],s=0,i,d;for(i=0;i<11;i++){d=+a.charAt(i);if(i===0)d-=1;s+=d*w[i]}return s%89===0}
-var $=function(i){return document.getElementById(i)};
-var fmt=new Intl.NumberFormat("en-AU",{style:"currency",currency:"AUD"});
-var m$=function(n){return fmt.format(n||0)};
-var uid=function(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)};
-var today=function(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
-var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
+const incomeCats=["Uber fares","Tips","Incentives/bonuses","Other income"];
+const expenseCats=["Fuel","Servicing","Repairs","Tyres","Registration","Insurance","Car wash","Parking","Tolls","Vehicle finance/lease","Mobile phone","Internet","Accounting","Software","Bank fees","Uber fees","Other"];
+let data=JSON.parse(localStorage.getItem("uft_data")||"[]");
+let settings=JSON.parse(localStorage.getItem("uft_settings")||'{"name":"","abn":"","gst":10,"registered":"yes"}');
 
-function bounds(per){
-  var d=new Date(),y=d.getFullYear(),m=d.getMonth(),a,b;
-  if(per==="month"){a=new Date(y,m,1);b=new Date(y,m+1,0)}
-  else if(per==="quarter"){var qs=Math.floor(((m+6)%12)/3)*3;var sm=(qs+6)%12;var sy=sm>m?y-1:y;a=new Date(sy,sm,1);b=new Date(sy,sm+3,0)}
-  else if(/^q[1-4]$/.test(per)){var n=+per.charAt(1),f0=m>=6?y:y-1,qm=(6+(n-1)*3)%12,qy=n<=2?f0:f0+1;a=new Date(qy,qm,1);b=new Date(qy,qm+3,0)}
-  else if(per==="fy"){var fy=m>=6?y:y-1;a=new Date(fy,6,1);b=new Date(fy+1,5,30)}
-  else return null;
-  return [a,b];
-}
-function inP(ds,bd){if(!bd)return true;var t=new Date(ds+"T00:00:00");return t>=bd[0]&&t<=bd[1]}
-function dfmt(d){return d.toLocaleDateString("en-AU",{day:"numeric",month:"short",year:"numeric"})}
-
-function expCalc(e){var biz=e.amt*(e.pct/100);var k=gk();var gst=e.gst?biz*k/(1+k):0;return{ex:biz-gst,gst:gst,biz:biz}}
-
-function calc(bd){
-  var I=S.income.filter(function(x){return inP(x.date,bd)}),E=S.expenses.filter(function(x){return inP(x.date,bd)});
-  var fares=0,tips=0,fees=0,trips=0,km=0,hrs=0;
-  I.forEach(function(x){fares+=x.fare;tips+=x.tips;fees+=x.fee;trips+=x.trips;km+=x.km;hrs+=x.hrs});
-  var reg=S.settings.gst;
-  var k=gk(),gstColl=reg?fares*k/(1+k):0,feeCredit=reg?fees*k/(1+k):0;
-  var expEx=0,expCred=0,cats={};
-  E.forEach(function(e){var c=expCalc(e);expEx+=reg?c.ex:c.biz;expCred+=reg?c.gst:0;cats[e.cat]=(cats[e.cat]||0)+(reg?c.ex:c.biz)});
-  var incEx=(reg?fares/(1+k):fares)+tips;
-  var feeEx=reg?fees/(1+k):fees;
-  var profit=incEx-feeEx-expEx;
-  return{I:I,E:E,fares:fares,tips:tips,fees:fees,trips:trips,km:km,hrs:hrs,gstColl:gstColl,feeCredit:feeCredit,expCred:expCred,expEx:expEx+feeEx,incEx:incEx,profit:profit,cats:cats,net:gstColl-feeCredit-expCred,feeEx:feeEx,ownExp:expEx}
-}
-
-function render(){
-  var per=$("period").value,bd=bounds(per),c=calc(bd);
-  $("who").textContent=[S.settings.name,S.settings.abn?"ABN "+fmtAbn(S.settings.abn):""].filter(Boolean).join(" · ");$("range").textContent=bd?dfmt(bd[0])+" to "+dfmt(bd[1]):"All recorded entries";
-  $("k-profit").textContent=m$(c.profit);
-  $("k-profit-s").textContent=c.hrs?m$(c.profit/c.hrs)+" per hour online":"Add hours to see $/hour";
-  $("k-inc").textContent=m$(c.incEx);$("k-inc-s").textContent=c.trips+" trips, tips "+m$(c.tips);
-  $("k-exp").textContent=m$(c.expEx);$("k-exp-s").textContent="incl. Uber fees "+m$(c.feeEx);
-  var g=$("k-gst");g.textContent=m$(c.net);g.className="v num "+(c.net>0?"neg":"pos");
-  $("k-gst-s").textContent=c.net<0?"Refund position for this period":"Set this aside for your BAS";
-  $("gst-box").innerHTML=S.settings.gst?
-    row("GST Collected",m$(c.gstColl))+row("GST Credits",m$(c.feeCredit+c.expCred))+row("<b>Net GST</b>","<b>"+m$(c.net)+"</b>")
-    :'<div class="empty">GST is turned off in Settings.</div>';
-  var ckm=Math.min(c.km,5000)*S.settings.rate,actual=c.ownExp;
-  $("stats").innerHTML=row("Trips",c.trips)+row("Business km",c.km.toLocaleString("en-AU"))+row("Hours online",c.hrs)+
-    row("Income per km",c.km?m$(c.incEx/c.km):"-")+row("Profit per trip",c.trips?m$(c.profit/c.trips):"-")+
-    row("Cents-per-km deduction",m$(ckm))+row("Actual car & running costs",m$(actual));
-  // monthly chart
-  var now=new Date(),ms=[],i;
-  for(i=5;i>=0;i--){var d=new Date(now.getFullYear(),now.getMonth()-i,1);ms.push({y:d.getFullYear(),m:d.getMonth(),lbl:d.toLocaleDateString("en-AU",{month:"short"})})}
-  var vals=ms.map(function(x){var b=[new Date(x.y,x.m,1),new Date(x.y,x.m+1,0)];return calc(b).profit});
-  var mx=Math.max.apply(null,vals.map(Math.abs).concat([1]));
-  $("chart").innerHTML=vals.map(function(v,k){return '<div class="col" title="'+m$(v)+'"><div class="b'+(v<0?" n":"")+'" style="height:'+Math.round(Math.abs(v)/mx*100)+'px"></div><span>'+ms[k].lbl+'</span></div>'}).join("");
-  var ck=Object.keys(c.cats).sort(function(a,b){return c.cats[b]-c.cats[a]});
-  $("cats").innerHTML=ck.length?ck.map(function(k){return row(esc(k),m$(c.cats[k]))}).join(""):'<div class="empty">No expenses in this period.</div>';
-  // income list
-  var il=c.I.slice().sort(function(a,b){return a.date<b.date?1:-1});
-  $("inc-list").innerHTML=il.length?'<table><thead><tr><th>Date</th><th class="r">Fares</th><th class="r">Tips</th><th class="r">Fees</th><th class="r">Trips</th><th class="r">Km</th><th class="r">Hrs</th><th></th></tr></thead><tbody>'+il.map(function(x){return '<tr><td>'+x.date+'</td><td class="r">'+m$(x.fare)+'</td><td class="r">'+m$(x.tips)+'</td><td class="r">'+m$(x.fee)+'</td><td class="r">'+x.trips+'</td><td class="r">'+x.km+'</td><td class="r">'+x.hrs+'</td><td class="r"><button class="btn alt sm" data-di="'+x.id+'">Delete</button></td></tr>'}).join("")+'</tbody></table>':'<div class="empty">No income recorded in this period. Add your first day above.</div>';
-  var el=c.E.slice().sort(function(a,b){return a.date<b.date?1:-1});
-  $("exp-list").innerHTML=el.length?'<table><thead><tr><th>Date</th><th>Category</th><th>Description</th><th class="r">Amount</th><th class="r">Business</th><th class="r">GST credit</th><th></th></tr></thead><tbody>'+el.map(function(x){var q=expCalc(x);return '<tr><td>'+x.date+'</td><td>'+esc(x.cat)+'</td><td>'+esc(x.desc||"")+'</td><td class="r">'+m$(x.amt)+'</td><td class="r">'+x.pct+'%</td><td class="r">'+m$(S.settings.gst?q.gst:0)+'</td><td class="r"><button class="btn alt sm" data-de="'+x.id+'">Delete</button></td></tr>'}).join("")+'</tbody></table>':'<div class="empty">No expenses in this period. Add fuel, insurance, servicing and more above.</div>';
-}
-function row(a,b){return '<div class="row"><span>'+a+'</span><span>'+b+'</span></div>'}
-function num(id){var v=parseFloat($(id).value);return isFinite(v)&&v>0?v:0}
-
-// tabs
-$("tabs").addEventListener("click",function(ev){var t=ev.target.closest("button");if(!t)return;
-  document.querySelectorAll("#tabs button").forEach(function(b){b.setAttribute("aria-selected",b===t)});
-  ["dash","inc","exp","set"].forEach(function(s){$(s).classList.toggle("hide",s!==t.dataset.t)});
-  $("period").parentNode.parentNode.classList.toggle("hide",t.dataset.t==="set")});
-$("period").addEventListener("change",render);
-
-$("e-cat").innerHTML=CATS.map(function(c){return "<option>"+c+"</option>"}).join("");
-$("i-date").value=$("e-date").value=today();
-var cm=new Date().getMonth(),cq=Math.floor(((cm+6)%12)/3)+1;
-
-$("i-add").addEventListener("click",function(){
-  var f=num("i-fare"),t=num("i-tips");
-  if(!$("i-date").value||(!f&&!t)){$("i-err").textContent="Enter a date and at least fares or tips.";return}
-  $("i-err").textContent="";
-  S.income.push({id:uid(),date:$("i-date").value,fare:f,tips:t,fee:num("i-fee"),trips:Math.round(num("i-trips")),km:num("i-km"),hrs:num("i-hrs")});
-  ["i-fare","i-tips","i-fee","i-trips","i-km","i-hrs"].forEach(function(i){$(i).value=""});
-  save();render()});
-$("e-add").addEventListener("click",function(){
-  var a=num("e-amt");
-  if(!$("e-date").value||!a){$("e-err").textContent="Enter a date and an amount above $0.";return}
-  $("e-err").textContent="";
-  var p=parseFloat($("e-pct").value);p=isFinite(p)?Math.min(100,Math.max(0,p)):100;
-  S.expenses.push({id:uid(),date:$("e-date").value,cat:$("e-cat").value,desc:$("e-desc").value.trim(),amt:a,pct:p,gst:$("e-gst").checked});
-  $("e-amt").value="";$("e-desc").value="";save();render()});
-document.addEventListener("click",function(ev){
-  var d=ev.target.dataset||{};
-  if(d.di){S.income=S.income.filter(function(x){return x.id!==d.di});save();render()}
-  if(d.de){S.expenses=S.expenses.filter(function(x){return x.id!==d.de});save();render()}});
-
-$("s-name").value=S.settings.name;$("s-abn").value=fmtAbn(S.settings.abn);$("s-grate").value=S.settings.gstRate;$("s-reg").value=S.settings.gst?"yes":"no";$("s-rate").value=S.settings.rate;
-$("s-save").addEventListener("click",function(){
-  var msg=$("s-msg"),abn=$("s-abn").value.replace(/\s/g,"");
-  if(abn&&!validAbn(abn)){msg.textContent="That ABN doesn't look valid. It should be 11 digits.";msg.className="note neg";return}
-  var gr=parseFloat($("s-grate").value);
-  if(!isFinite(gr)||gr<0||gr>100){msg.textContent="Enter a GST rate between 0 and 100.";msg.className="note neg";return}
-  var r=parseFloat($("s-rate").value);
-  S.settings.name=$("s-name").value.trim();S.settings.abn=abn;S.settings.gstRate=gr;S.settings.gst=$("s-reg").value==="yes";S.settings.rate=isFinite(r)&&r>=0?r:0.88;
-  $("s-abn").value=fmtAbn(abn);save();render();
-  msg.className="note pos";msg.textContent="Settings saved.";setTimeout(function(){msg.textContent=""},2500)});
-
-function csv(rows){return rows.map(function(r){return r.map(function(v){return '"'+String(v).replace(/"/g,'""')+'"'}).join(",")}).join("\n")}
-function dl(name,text){var a=document.createElement("a");a.href="data:text/csv;charset=utf-8,"+encodeURIComponent(text);a.download=name;document.body.appendChild(a);a.click();a.remove()}
-$("x-inc").addEventListener("click",function(){dl("uber-income.csv",csv([["Date","Fares","Tips","Uber fees","Trips","Km","Hours"]].concat(S.income.map(function(x){return[x.date,x.fare,x.tips,x.fee,x.trips,x.km,x.hrs]}))))});
-$("x-exp").addEventListener("click",function(){dl("uber-expenses.csv",csv([["Date","Category","Description","Amount","Business %","Includes GST"]].concat(S.expenses.map(function(x){return[x.date,x.cat,x.desc,x.amt,x.pct,x.gst?"Yes":"No"]}))))});
-$("x-clr").addEventListener("click",function(){
-  if($("x-clr").dataset.armed){S.income=[];S.expenses=[];save();render();$("x-clr").textContent="Delete all data";delete $("x-clr").dataset.armed}
-  else{$("x-clr").dataset.armed=1;$("x-clr").textContent="Click again to confirm";setTimeout(function(){$("x-clr").textContent="Delete all data";delete $("x-clr").dataset.armed},4000)}});
-render();
-})();
+const $=id=>document.getElementById(id);
+const money=n=>new Intl.NumberFormat("en-AU",{style:"currency",currency:"AUD"}).format(n||0);
+function save(){localStorage.setItem("uft_data",JSON.stringify(data));localStorage.setItem("uft_settings",JSON.stringify(settings));}
+function fyFor(d){let x=new Date(d+"T00:00:00");let y=x.getFullYear();return (x.getMonth()>=6?y:y-1)+"-"+String((x.getMonth()>=6?y+1:y).toString()).slice(-2)}
+function quarterFor(d){let m=new Date(d+"T00:00:00").getMonth();return m<=2?"Q3":m<=5?"Q4":m<=8?"Q1":"Q2"}
+function gstCalc(amount,status,override){let rate=Number(settings.gst)/100;if(status==="none"||status==="review")return 0;if(override!==""&&override!=null)return Number(override)||0;return status==="included"?amount*rate/(1+rate):amount*rate}
+function populate(){ $("inCat").innerHTML=incomeCats.map(x=>`<option>${x}</option>`).join(""); $("exCat").innerHTML=expenseCats.map(x=>`<option>${x}</option>`).join(""); let fys=[...new Set(data.map(x=>x.fy))];let now=new Date();let cur=fyFor(now.toISOString().slice(0,10));if(!fys.includes(cur))fys.push(cur);fys.sort().reverse();$("reportFY").innerHTML=fys.map(x=>`<option>${x}</option>`).join(""); $("sName").value=settings.name;$("sABN").value=settings.abn;$("sGST").value=settings.gst;$("sRegistered").value=settings.registered;$("fyHeader").textContent=cur+" Financial Year";}
+function currentQuarter(){return quarterFor(new Date().toISOString().slice(0,10))}
+function filterPeriod(period){let today=new Date(), ds=today.toISOString().slice(0,10);let fy=fyFor(ds), q=currentQuarter();return data.filter(x=>{if(period==="all")return true;if(period==="fy")return x.fy===fy;if(period==="quarter")return x.fy===fy&&x.quarter===q;if(period==="month")return x.date.slice(0,7)===ds.slice(0,7);return true})}
+function totals(list){let income=list.filter(x=>x.type==="income").reduce((s,x)=>s+x.amount,0);let exp=list.filter(x=>x.type==="expense").reduce((s,x)=>s+x.amount*(x.business/100),0);let collected=list.filter(x=>x.type==="income").reduce((s,x)=>s+x.gst,0);let credits=list.filter(x=>x.type==="expense").reduce((s,x)=>s+x.gst*(x.business/100),0);return {income,exp,profit:income-exp,collected,credits,netGST:collected-credits}}
+function updateDash(){let t=totals(filterPeriod($("dashPeriod").value));$("mIncome").textContent=money(t.income);$("mExpense").textContent=money(t.exp);$("mProfit").textContent=money(t.profit);$("mCollected").textContent=money(t.collected);$("mCredits").textContent=money(t.credits);$("mNetGST").textContent=money(t.netGST);$("mGST").textContent=money(t.netGST);$("quarterInfo").textContent=`Current reporting period: ${currentQuarter()} (${fyFor(new Date().toISOString().slice(0,10))})`;let review=data.filter(x=>x.gstStatus==="review").length;$("reviewInfo").textContent=review?`${review} transaction(s) require GST review.`:"No transactions marked for GST review."}
+function renderTx(){let s=$("search").value.toLowerCase(),tf=$("typeFilter").value,qf=$("qFilter").value;let rows=data.filter(x=>(tf==="all"||x.type===tf)&&(qf==="all"||x.quarter===qf)&&[x.category,x.description,x.supplier].join(" ").toLowerCase().includes(s)).sort((a,b)=>b.date.localeCompare(a.date));$("txBody").innerHTML=rows.map(x=>`<tr><td>${x.date}</td><td>${x.type}</td><td>${x.category}</td><td>${x.description||""}</td><td>${money(x.amount)}</td><td>${money(x.gst)}</td><td>${x.business}%</td><td>${x.quarter}</td><td><button class="danger" onclick="delTx('${x.id}')">Delete</button></td></tr>`).join("")||'<tr><td colspan="9">No transactions found.</td></tr>'}
+function delTx(id){if(confirm("Delete this transaction permanently?")){data=data.filter(x=>x.id!==id);save();renderAll()}}
+function renderReport(){let fy=$("reportFY").value,q=$("reportQ").value,t=totals(data.filter(x=>x.fy===fy&&x.quarter===q));$("rIncome").textContent=money(t.income);$("rExpense").textContent=money(t.exp);$("rProfit").textContent=money(t.profit);$("rGST").textContent=money(t.netGST);$("rCollected").textContent=money(t.collected);$("rCredits").textContent=money(t.credits);let cats={};data.filter(x=>x.fy===fy&&x.quarter===q&&x.type==="expense").forEach(x=>cats[x.category]=(cats[x.category]||0)+x.amount*(x.business/100));$("rCats").innerHTML=Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<p>${k}: <b>${money(v)}</b></p>`).join("")||"<p>No expenses.</p>"}
+function renderAll(){populate();updateDash();renderTx();renderReport()}
+function go(id){document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));$(id).classList.add("active");document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===id));if(id==="dashboard")updateDash();if(id==="transactions")renderTx();if(id==="reports")renderReport()}
+["Dashboard","Income","Expenses","Transactions","Quarterly Reports","Settings"].forEach((n,i)=>{let id=["dashboard","income","expenses","transactions","reports","settings"][i];let b=document.createElement("button");b.textContent=n;b.dataset.page=id;b.onclick=()=>go(id);if(i===0)b.className="active";$("nav").appendChild(b)});
+$("incomeForm").onsubmit=e=>{e.preventDefault();let date=$("inDate").value,amount=Number($("inAmount").value),status=$("inGST").value;data.push({id:crypto.randomUUID(),type:"income",date,category:$("inCat").value,description:$("inDesc").value,amount,gstStatus:status,gst:gstCalc(amount,status,$("inGSTAmt").value),business:100,fy:fyFor(date),quarter:quarterFor(date),supplier:""});save();e.target.reset();$("inDate").value=new Date().toISOString().slice(0,10);renderAll();go("transactions")};
+$("expenseForm").onsubmit=e=>{e.preventDefault();let date=$("exDate").value,amount=Number($("exAmount").value),business=Number($("exBusiness").value),status=$("exGST").value;data.push({id:crypto.randomUUID(),type:"expense",date,category:$("exCat").value,supplier:$("exSupplier").value,description:$("exDesc").value,amount,gstStatus:status,gst:gstCalc(amount,status,$("exGSTAmt").value),business,fy:fyFor(date),quarter:quarterFor(date)});save();e.target.reset();$("exDate").value=new Date().toISOString().slice(0,10);$("exBusiness").value=100;renderAll();go("transactions")};
+$("settingsForm").onsubmit=e=>{e.preventDefault();settings={name:$("sName").value,abn:$("sABN").value,gst:Number($("sGST").value),registered:$("sRegistered").value};save();renderAll();alert("Settings saved.")};
+$("dashPeriod").onchange=updateDash;$("search").oninput=renderTx;$("typeFilter").onchange=renderTx;$("qFilter").onchange=renderTx;$("reportFY").onchange=renderReport;$("reportQ").onchange=renderReport;
+const today=new Date().toISOString().slice(0,10);$("inDate").value=today;$("exDate").value=today;renderAll();
 </script>
-<script>
-if("serviceWorker" in navigator&&/^https?:$/.test(location.protocol)){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}
-</script>
-</body>
-</html>
+</body></html>

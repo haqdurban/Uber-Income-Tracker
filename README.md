@@ -1,55 +1,17 @@
-# Uber Income Tracker
+# Uber Finance Tracker
 
-A mobile-friendly app for Australian Uber and rideshare drivers to record income and expenses, see profit, and keep an estimate of GST. It runs entirely on your device: there is no server and no account. Data is saved in the browser or app storage on the phone.
+A single-file, responsive Uber Finance Tracker dashboard with a light main background, navy sidebar, colourful financial summary cards, and mobile/iPhone-friendly layout.
 
-> GST figures are estimates for record-keeping purposes only. Verify GST treatment and your Business Activity Statement (BAS) figures with a qualified accountant or registered tax agent.
+## Update your GitHub repository
 
-## What's in this repo
+1. Open your GitHub repository in a browser.
+2. Open the repository's main/root folder (the top level, not a subfolder).
+3. If your website already uses `index.html`, open that file and choose the pencil icon to edit it, or delete/replace it using **Add file → Upload files**.
+4. Upload this `index.html` from this package to the repository's root folder. If GitHub asks whether to replace the existing file, confirm only if you want this new dashboard to replace the current home page.
+5. Add this `README.md` if your repository does not already have one. If it does, keep your existing README or merge the useful description above.
+6. Commit the changes with a message such as `Update dashboard colours and mobile layout`.
+7. If you use GitHub Pages, open **Settings → Pages** and confirm the publishing source points to the branch and root folder where `index.html` is stored. Wait for the deployment to finish, then refresh the website.
 
-| File | Purpose |
-| --- | --- |
-| `index.html` | The whole app (HTML, CSS and JavaScript in one file) |
-| `manifest.webmanifest`, `sw.js`, `icons/` | Make it installable on a phone and usable offline (PWA) |
-| `package.json`, `capacitor.config.json`, `scripts/build.js` | Wrap the app as a native Android or iOS app with Capacitor |
-| `.github/workflows/pages.yml` | Publishes the app to GitHub Pages automatically |
-| `.github/workflows/android-apk.yml` | Builds a downloadable Android APK on GitHub |
+## Important
 
-## Option 1 (easiest): install it from GitHub Pages
-
-1. Create a new repository on GitHub and upload all of these files (or push them with git).
-2. In the repo go to **Settings > Pages**, and under *Build and deployment* set **Source** to **GitHub Actions**.
-3. Open the **Actions** tab and wait for *Deploy to GitHub Pages* to finish. Your app is then at `https://<your-username>.github.io/<repo-name>/`.
-4. Open that link on your phone:
-   - **iPhone (Safari):** Share > **Add to Home Screen**.
-   - **Android (Chrome):** menu > **Install app** (or *Add to Home screen*).
-
-It then opens full screen like a normal app and works offline.
-
-## Option 2: Android APK built by GitHub
-
-1. Push the repo to GitHub.
-2. Go to **Actions > Build Android APK > Run workflow**.
-3. When it finishes, download `uber-income-tracker-debug-apk` from the run's **Artifacts**, unzip it, and install `app-debug.apk` on your Android phone (you will need to allow installs from unknown sources).
-
-This is a debug build for personal use. To publish on Google Play you need a signed release build (open the `android` folder in Android Studio).
-
-## Option 3: build locally with Capacitor (Android and iOS)
-
-Requirements: Node 20+, Android Studio for Android, and a Mac with Xcode for iOS.
-
-```bash
-npm install
-npm run build
-npx cap add android      # and/or: npx cap add ios
-npm run android          # or: npm run ios   (syncs and opens the IDE)
-```
-
-Before publishing to a store, change `appId` in `capacitor.config.json` (for example `au.com.yourname.ubertracker`).
-
-## Updating the app
-
-Edit `index.html`, then bump `CACHE` in `sw.js` (for example `v2`) so phones that already installed it pick up the change. Pushing to `main` redeploys GitHub Pages.
-
-## Your data
-
-Records live only in the browser or app storage on that device. Use **Settings > Export CSV** regularly for a backup. Clearing browser data or uninstalling the app removes the records, and data is not shared between devices.
+This package contains a standalone HTML page. Before replacing your current `index.html`, download a backup of the existing file. If your current dashboard uses other files or integrations, check those before replacing it. This update changes the page file; it does not configure a database, authentication, or hosting by itself.
